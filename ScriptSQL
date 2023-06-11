@@ -1,0 +1,472 @@
+-- -----------------------------------------------------
+-- Schema AcademicGroup
+-- -----------------------------------------------------
+CREATE SCHEMA `AcademicGroup` DEFAULT CHARACTER SET utf8 ;
+USE `AcademicGroup` ;
+
+-- -----------------------------------------------------
+-- Table Nivel
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Nivel (
+id_nivel INT NOT NULL,
+nivel VARCHAR (45),
+
+PRIMARY KEY (id_nivel));
+-- -----------------------------------------------------
+-- Table Modalidade
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Modalidade (
+id_modalidade INT NOT NULL,
+modalidade VARCHAR (45),
+
+PRIMARY KEY (id_modalidade)
+
+);
+-- -----------------------------------------------------
+-- Table Rede
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Rede (
+id_rede INT NOT NULL,
+rede VARCHAR (45),
+
+PRIMARY KEY (id_rede)
+
+);
+-- -----------------------------------------------------
+-- Table Formato
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Formato (
+id_formato INT NOT NULL,
+formato_prova VARCHAR (45),
+
+PRIMARY KEY (id_formato)
+
+);
+-- -----------------------------------------------------
+-- Table País
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.País (
+id_pais INT NOT NULL,
+continente_pais VARCHAR (45) NOT NULL,
+nome_pais VARCHAR (45) NOT NULL,
+idioma_pais VARCHAR (45) NOT NULL,
+
+PRIMARY KEY (id_pais));
+-- -----------------------------------------------------
+-- Table Tipo de matricula
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Tipo_de_matricula (
+id_tipo_matricula INT NOT NULL,
+tipo_matricula VARCHAR (45) NOT NULL,
+PRIMARY KEY (id_tipo_matricula));
+-- -----------------------------------------------------
+-- Table Usuário
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Usuário (
+id_usuario INT NOT NULL,
+login_usuario VARCHAR (45) NOT NULL,
+senha_usuario VARCHAR (45) NOT NULL,
+PRIMARY KEY (id_usuario));
+-- -----------------------------------------------------
+-- Table Sexo
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Sexo (
+idSexo INT NOT NULL,
+tipo_sexo VARCHAR (45) NOT NULL,
+
+PRIMARY KEY (idSexo));
+-- -----------------------------------------------------
+-- Table Cargo
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Cargo (
+id_cargo INT NOT NULL,
+tipo_cargo VARCHAR (45)  NOT NULL,
+responsabilidade_de_cargo VARCHAR (45)  NOT NULL,
+nome_cargo VARCHAR (45)  NOT NULL,
+
+PRIMARY KEY (id_cargo)
+
+);
+-- -----------------------------------------------------
+-- Table Endereço
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Endereço (
+id_endereço INT NOT NULL,
+cidade VARCHAR (75) NOT NULL,
+estado VARCHAR (75) NOT NULL,
+logradouro VARCHAR (45) NOT NULL,
+tipo_logradouro VARCHAR (45) NOT NULL,
+rua VARCHAR (65) NOT NULL,
+numero VARCHAR (45) NOT NULL,
+bairro VARCHAR (65) NOT NULL,
+
+PRIMARY KEY (id_endereço)
+);
+-- -----------------------------------------------------
+-- Table Area_conhecimento
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Area_conhecimento (
+id_area_conhecimento INT NOT NULL,
+tipo_area_conhecimento VARCHAR (45),
+
+PRIMARY KEY (id_area_conhecimento)
+
+);
+-- -----------------------------------------------------
+-- Table Funcionário
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Funcionário (
+id_funcionario INT NOT NULL,
+nome_funcionario VARCHAR (100) NOT NULL,
+sobrenome_funcionario VARCHAR (45) NOT NULL,
+nascimento_funcionario DATE NOT NULL ,
+cpf_funcionario CHAR (11) NOT NULL ,
+idade_funcionario VARCHAR (2) NOT NULL ,
+telefone_funcionario VARCHAR (15) NOT NULL ,
+email_funcionario TINYTEXT NOT NULL,
+id_usuario INT NOT NULL,
+id_disciplina INT NOT NULL, 
+idSexo INT NOT NULL,
+id_cargo INT NOT NULL,
+id_endereço INT NOT NULL,
+
+PRIMARY KEY (id_funcionario),
+CONSTRAINT fk_id_usuario FOREIGN KEY (id_usuario) 
+REFERENCES AcademicGroup.Usuário(id_usuario), 
+CONSTRAINT fk_Sexo FOREIGN KEY (idSexo) 
+REFERENCES AcademicGroup.Sexo(idSexo),
+CONSTRAINT fk_Cargo FOREIGN KEY (id_cargo) 
+REFERENCES AcademicGroup.Cargo(id_cargo),  
+CONSTRAINT fk_id_endereço FOREIGN KEY (id_endereço) 
+REFERENCES AcademicGroup.Endereço(id_endereço)
+);
+-- -----------------------------------------------------
+-- Table Escola
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Escola (
+id_escola INT NOT NULL,
+noma_escola VARCHAR (45) NOT NULL,
+campus_escola VARCHAR (45) NOT NULL,
+calendario_escola DATE NOT NULL,
+infraestrutura_escola MEDIUMTEXT NOT NULL,
+diretor_escola VARCHAR (100) NOT NULL,
+telefone_escola VARCHAR (15) NOT NULL,
+email_escola VARCHAR (65) NOT NULL,
+id_nivel INT NOT NULL,
+id_endereço INT NOT NULL,
+id_pais INT NOT NULL,
+id_rede INT NOT NULL,
+id_modalidade INT NOT NULL,
+
+PRIMARY KEY (id_escola),
+CONSTRAINT fk_Nivel FOREIGN KEY (id_nivel) 
+REFERENCES AcademicGroup.Nivel(id_nivel), 
+CONSTRAINT fk_Endereco FOREIGN KEY (id_endereço) 
+REFERENCES AcademicGroup.Endereço(id_endereço),
+CONSTRAINT fk_Pais FOREIGN KEY (id_pais) 
+REFERENCES AcademicGroup.País(id_pais),
+CONSTRAINT fk_Rede FOREIGN KEY (id_rede) 
+REFERENCES AcademicGroup.Rede(id_rede),  
+CONSTRAINT fk_Modalidade FOREIGN KEY (id_modalidade) 
+REFERENCES AcademicGroup.Modalidade(id_modalidade)
+);
+-- -----------------------------------------------------
+-- Table Turma
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Turma (
+id_turma INT NOT NULL,
+nome_turma VARCHAR (45) NOT NULL,
+serie_turma VARCHAR (15) NOT NULL,
+quantidade_turma VARCHAR (3) NOT NULL,
+semestre_turma VARCHAR (45) NOT NULL,
+id_escola INT NOT NULL,
+
+PRIMARY KEY (id_turma),
+CONSTRAINT fk_Escola FOREIGN KEY (id_escola) 
+REFERENCES AcademicGroup.Escola(id_escola)
+);
+-- -----------------------------------------------------
+-- Table Aluno
+-- -----------------------------------------------------
+
+CREATE TABLE AcademicGroup.Aluno (
+  id_aluno INT NOT NULL,
+  nome_aluno VARCHAR(45) NOT NULL,
+  sobrenome_aluno VARCHAR(45) NOT NULL,
+  cpf_aluno CHAR(11) NOT NULL,
+  nascimento_aluno DATE NOT NULL,
+  idade_aluno VARCHAR(2) NOT NULL ,
+  telefone_aluno VARCHAR(15) NOT NULL ,
+  email_aluno TINYTEXT NOT NULL ,
+  id_Turma INT NOT NULL,
+  id_endereço INT NOT NULL,
+  idsexo INT NOT NULL,
+
+PRIMARY KEY (id_aluno),
+CONSTRAINT cpf_aluno_unique UNIQUE(cpf_aluno),
+CONSTRAINT fk_id_Turma FOREIGN KEY (id_Turma) 
+REFERENCES AcademicGroup.Turma(id_Turma),   
+CONSTRAINT fk_Endereco1 FOREIGN KEY (id_endereço) 
+REFERENCES AcademicGroup.Endereço(id_endereço),
+CONSTRAINT fk_idsexo1 FOREIGN KEY (idsexo) 
+REFERENCES AcademicGroup.Sexo(idsexo)
+);
+-- -----------------------------------------------------
+-- Table Avaliação
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Avaliação (
+id_avaliacao INT NOT NULL,
+descricao_avaliacao TINYTEXT NOT NULL,
+data_avaliacao DATE NOT NULL,
+nota_avaliacao FLOAT NOT NULL,
+id_turma INT NOT NULL,
+id_formato INT NOT NULL,
+id_area_conhecimento INT NOT NULL,
+
+PRIMARY KEY (id_avaliacao),
+CONSTRAINT fk_turma_id_turma FOREIGN KEY (id_turma) 
+REFERENCES AcademicGroup.Turma(id_turma), 
+CONSTRAINT fk_Formato FOREIGN KEY (id_formato) 
+REFERENCES AcademicGroup.Formato(id_formato),
+CONSTRAINT fk_Area_conhecimento FOREIGN KEY (id_area_conhecimento) 
+REFERENCES AcademicGroup.Area_conhecimento(id_area_conhecimento) 
+);
+-- -----------------------------------------------------
+-- Table Matricula
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Matricula (
+id_matricula INT NOT NULL,
+status VARCHAR(50) NOT NULL,
+id_tipo_matricula INT NOT NULL,
+id_funcionario INT NOT NULL,
+id_Aluno INT NOT NULL,
+
+  PRIMARY KEY (id_matricula),
+  UNIQUE INDEX id_matricula_UNIQUE (id_matricula),
+
+CONSTRAINT fk_id_tipo_de_matricula FOREIGN KEY (id_tipo_matricula) 
+REFERENCES AcademicGroup.Tipo_de_matricula(id_tipo_matricula), 
+CONSTRAINT fk_id_funcionario FOREIGN KEY (id_funcionario) 
+REFERENCES AcademicGroup.Funcionário(id_funcionario),
+CONSTRAINT fk_id_Aluno FOREIGN KEY (id_Aluno) 
+REFERENCES AcademicGroup.Aluno(id_Aluno) 
+);
+-- -----------------------------------------------------
+-- Table Disciplina
+-- -----------------------------------------------------
+CREATE TABLE AcademicGroup.Disciplina (
+id_disciplina INT NOT NULL,
+nome_disciplina VARCHAR (45) NOT NULL,
+carga_horaria_disciplina FLOAT NOT NULL,
+professor_disciplina VARCHAR (100) NOT NULL,
+bibliografia_disciplina MEDIUMTEXT NOT NULL,
+id_turma INT NOT NULL,
+id_area_conhecimento INT NOT NULL, 
+id_avaliacao INT NOT NULL,
+
+
+PRIMARY KEY (id_disciplina),
+CONSTRAINT fk_id_turma1 FOREIGN KEY (id_turma) 
+REFERENCES AcademicGroup.Turma(id_turma), 
+CONSTRAINT fk_Area_conhecimento1 FOREIGN KEY (id_area_conhecimento) 
+REFERENCES AcademicGroup.Area_conhecimento(id_area_conhecimento),
+CONSTRAINT fk_Avaliação1 FOREIGN KEY (id_avaliacao) 
+REFERENCES AcademicGroup.Avaliação(id_avaliacao) 
+);
+
+ALTER TABLE AcademicGroup.Funcionário 
+ADD CONSTRAINT fk_disciplina FOREIGN KEY (id_disciplina) 
+REFERENCES AcademicGroup.disciplina(id_disciplina)
+;
+
+
+
+
+
+
+
+-- -----------------------------------------------------
+-- Data for table Usuário
+-- -----------------------------------------------------
+
+INSERT INTO Usuário(id_usuario,login_usuario,senha_usuario)
+VALUES (001,'Agostinho','Ensino');
+
+INSERT INTO Usuário(id_usuario,login_usuario,senha_usuario)
+VALUES (002,'Ramón','Remoto');
+
+-- -----------------------------------------------------
+-- Data for table Disciplina
+-- -----------------------------------------------------
+
+INSERT INTO Disciplina  (id_disciplina,nome_disciplina, carga_horaria_disciplina, professor_disciplina, bibliografia_disciplina) 
+VALUES (001,  'AntiAluguel',  '115' ,'Agostinho Carrara','https://desciclo.pedia.ws/wiki/Dio_Brando');
+
+INSERT INTO Disciplina  (id_disciplina,nome_disciplina, carga_horaria_disciplina, professor_disciplina, bibliografia_disciplina) 
+VALUES (002,  'Box',  '115' ,'Ramón Valdés','https://desciclo.pedia.ws/wiki/Jotaro_Kujo');
+-- -----------------------------------------------------
+-- Data for table sexo
+-- -----------------------------------------------------
+
+INSERT INTO sexo(idSexo,tipo_sexo) 
+VALUES (001,'Masculino');
+
+INSERT INTO sexo(idSexo,tipo_sexo) 
+VALUES (002,'Masculino');
+
+-- -----------------------------------------------------
+-- Data for table cargo
+-- -----------------------------------------------------
+
+INSERT INTO cargo(id_cargo,tipo_cargo,responsabilidade_de_cargo,nome_cargo) 
+VALUES (001,'Docência','Ensino','Professor');
+
+INSERT INTO cargo(id_cargo,tipo_cargo,responsabilidade_de_cargo,nome_cargo) 
+VALUES (002,'Gerência','Administração','Diretor');
+
+-- -----------------------------------------------------
+-- Data for table Endereço
+-- ----------------------------------------------------
+
+
+
+INSERT INTO Endereço (id_endereço,cidade,estado,logradouro, tipo_logradouro,rua,numero,bairro )
+VALUES (001,'Betim','MG','Casa','Rua Oryba','197','Icaivera','Funil' );
+
+INSERT INTO Endereço (id_endereço,cidade,estado,logradouro, tipo_logradouro,rua,numero,bairro )
+VALUES (002,'Betim','MG','Casa','Rua Bela Vista','157','Imbiruçu','Cruzeiro');
+
+INSERT INTO Endereço (id_endereço,cidade,estado,logradouro, tipo_logradouro,rua,numero,bairro )
+VALUES (003,'Betim','MG','Casa','Rua Pouso Alto','113','Vila Cristina','Cruzeiro do Norte');
+
+INSERT INTO Endereço (id_endereço,cidade,estado,logradouro, tipo_logradouro,rua,numero,bairro )
+VALUES (004,'Betim','MG','Casa','Rua Santa Maria','745','Imbiruçu','Cruzeiro do Sul');
+
+INSERT INTO Endereço (id_endereço,cidade,estado,logradouro, tipo_logradouro,rua,numero,bairro )
+VALUES (005,'Betim','MG','Escola','Rua Eirussu','597','Icaivera','Cruzeiro do Leste');
+
+-- -----------------------------------------------------
+-- Data for table Funcionário
+-- -----------------------------------------------------
+INSERT INTO Funcionário ( id_funcionario, nome_funcionario, sobrenome_funcionario, nascimento_funcionario, cpf_funcionario, idade_funcionario,  telefone_funcionario, email_funcionario) 
+VALUES (001, 'Agostinho', 'Carrara','1965-08-31', '67876473016',   '58',  '3199912503', 'agostinhodelas@yahoo.com');
+
+ INSERT INTO Funcionário ( id_funcionario, nome_funcionario, sobrenome_funcionario, nascimento_funcionario, cpf_funcionario, idade_funcionario,  telefone_funcionario, email_funcionario) 
+VALUES (002, 'Ramón', 'Valdés','1924-09-02', '65229281081',   '99',  '3194028922', 'madruguinha@hotmail.com');
+
+-- -----------------------------------------------------
+-- Data for table Aluno
+-- -----------------------------------------------------
+
+
+INSERT INTO Aluno ( id_aluno, nome_aluno, sobrenome_aluno, nascimento_aluno, cpf_aluno, idade_aluno,  telefone_aluno, email_aluno) 
+VALUES (001, 'Flapjack', 'Knuckles',  '2008-12-23','04084933058', '15',  '3193422656', 'docejack@gmail.com');
+
+INSERT INTO Aluno ( id_aluno, nome_aluno, sobrenome_aluno, nascimento_aluno, cpf_aluno, idade_aluno,  telefone_aluno, email_aluno) 
+VALUES (002, 'Ben', 'Tennyson',  '2006-11-04', '81670262057',  '13',  '3193422656', 'tennyson10@gmail.com');
+
+
+-- -----------------------------------------------------
+-- Data for table Escola
+-- -----------------------------------------------------
+
+INSERT INTO Escola (id_escola, noma_escola,campus_escola, calendario_escola, infraestrutura_escola, diretor_escola, telefone_escola, email_escola) 
+VALUES (001, 'Academia dos Trapalhões','1','2023-09-09', 'Sala de aula A1-Sala de aula A2-Sala de aula A3-Biblioteca-Laboratório-Sala de informática-Quadra esportiva-Refeitório-Sala dos professores-Sala de administração-Auditório-Área livre', 'Ramón Valdés', '3199357425', 'academiatrapalhada@atmail.com'); 
+
+-- -----------------------------------------------------
+-- Data for table Avaliação
+-- -----------------------------------------------------
+
+
+INSERT INTO Avaliação (id_avaliacao, descricao_avaliacao, data_avaliacao, nota_avaliacao) 
+VALUES (001,  'Avaliação A1 onde é de boa porque é fácil',  '2023-05-15' ,'30');
+
+INSERT INTO Avaliação (id_avaliacao, descricao_avaliacao, data_avaliacao, nota_avaliacao) 
+VALUES (002,  'Avaliação A2 onde é tenso porque é difícil',  '2023-05-15' ,'30');
+
+INSERT INTO Avaliação (id_avaliacao, descricao_avaliacao, data_avaliacao, nota_avaliacao) 
+VALUES (003,  'Avaliação A3 onde é de boa porque é trabalho',  '2023-07-15' ,'40');
+
+-- -----------------------------------------------------
+-- Data for table Turma
+-- -----------------------------------------------------
+
+INSERT INTO Turma (id_turma, nome_turma, serie_turma, quantidade_turma, semestre_turma) 
+VALUES (001,  'Galerinha do Barulho',  '8º' ,'2','1º');
+
+-- -----------------------------------------------------
+-- Data for table País
+-- -----------------------------------------------------
+
+INSERT INTO país(id_pais, continente_pais, nome_pais, idioma_pais) 
+VALUES (001,  'América do Sul','Brasil','Português');
+
+-- -----------------------------------------------------
+-- Data for table modalidade
+-- -----------------------------------------------------
+
+INSERT INTO modalidade(id_modalidade, modalidade) 
+VALUES (001,'Presencial');
+
+-- -----------------------------------------------------
+-- Data for table rede
+-- -----------------------------------------------------
+
+INSERT INTO rede(id_rede,rede) 
+VALUES (001,'Publica');
+
+-- -----------------------------------------------------
+-- Data for table nivel
+-- -----------------------------------------------------
+
+INSERT INTO nivel(id_Nivel,nivel) 
+VALUES (001,'2');
+
+-- -----------------------------------------------------
+-- Data for table formato
+-- -----------------------------------------------------
+
+INSERT INTO formato(id_formato,formato_prova) 
+VALUES (001,'Fechado');
+
+-- -----------------------------------------------------
+-- Data for table area conhecimento
+-- -----------------------------------------------------
+
+INSERT INTO area_conhecimento(id_area_conhecimento,tipo_area_conhecimento) 
+VALUES (001,'inteligência social');
+
+-- -----------------------------------------------------
+-- Data for table Matricula
+-- ----------------------------------------------------
+INSERT INTO matricula(id_matricula,
+status )
+VALUES (001,'Ativa' );
+
+INSERT INTO matricula(id_matricula,
+status )
+VALUES (002,'Ativa' );
+
+INSERT INTO matricula(id_matricula,
+status )
+VALUES (003,'Ativa' );
+
+INSERT INTO matricula(id_matricula,
+status )
+VALUES (004,'Ativa' );
+
+-- -----------------------------------------------------
+-- Data for table Tipo de Matricula
+-- ----------------------------------------------------
+INSERT INTO Tipo_de_matricula (id_tipo_matricula,
+tipo_matricula)
+VALUES (001,'Professor');
+INSERT INTO Tipo_de_matricula (id_tipo_matricula,
+tipo_matricula)
+VALUES (002,'Diretor');
+INSERT INTO Tipo_de_matricula (id_tipo_matricula,
+tipo_matricula)
+VALUES (003,'Aluno');
+INSERT INTO Tipo_de_matricula (id_tipo_matricula,
+tipo_matricula)
+VALUES (004,'Aluno');
